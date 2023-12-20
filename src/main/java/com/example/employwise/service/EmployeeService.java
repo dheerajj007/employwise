@@ -6,6 +6,10 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,8 +46,21 @@ public class EmployeeService {
     }
 
 
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    public Page<Employee> getAllEmployees(int page, int pageSize, String sortBy) {
+        // Validate page and pageSize
+        if (page < 0 || pageSize <= 0) {
+            throw new IllegalArgumentException("Page and pageSize must be non-negative and greater than zero.");
+        }
+
+        // Validate sortBy
+        if (sortBy == null || sortBy.trim().isEmpty()) {
+            throw new IllegalArgumentException("SortBy parameter is required.");
+        }
+
+        // Create a Pageable object for pagination and sorting
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sortBy));
+
+        return employeeRepository.findAll(pageable);
     }
 
     public Optional<Employee> getEmployeeById(String employeeId) {
