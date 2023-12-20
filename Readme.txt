@@ -59,6 +59,15 @@
        ```
      - Response: Updated Employee
 
+     - **Get nth Level Manager:**
+         - Endpoint: GET /api/employees/manager/{employeeId}/{level}
+         - Example: To get the 2nd level manager of employee with ID "07d369f5-53ec-45e7-81f6-8c1838882c73":
+           ```
+           GET /api/employees/manager/07d369f5-53ec-45e7-81f6-8c1838882c73/2
+           ```
+         - Response: Manager at the specified level
+
+
 4. **Exception Handling and Validation:**
    - The project includes exception handling for better error responses.
    - Validation is applied using Spring Boot's validation starter. Invalid requests will result in appropriate error messages.

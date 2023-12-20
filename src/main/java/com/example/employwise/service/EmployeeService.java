@@ -46,6 +46,9 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
+    public Optional<Employee> getEmployeeById(String employeeId) {
+        return employeeRepository.findById(employeeId);
+    }
 
     public void deleteEmployeeById(String employeeId) {
         employeeRepository.deleteById(employeeId);
@@ -58,5 +61,41 @@ public class EmployeeService {
         }
         return Optional.empty(); // Employee with the given ID not found
     }
+    public Optional<Employee> getNthLevelManager(String employeeId, int level) {
+        if (level < 1) {
+            throw new IllegalArgumentException("Level should be greater than or equal to 1");
+        }
+
+        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+
+        while (employeeOptional.isPresent() && level > 0) {
+            Employee employee = employeeOptional.get();
+            String reportsToName = employee.getReportsTo();
+
+            if (reportsToName == null || reportsToName.isEmpty()) {
+                // If there is no manager or the field is empty, break the loop
+                break;
+            }
+
+            // Fetch the manager based on their name
+            Optional<Employee> managerOptional = employeeRepository.findByEmployeeName(reportsToName);
+
+            if (managerOptional.isPresent()) {
+                // Logging for troubleshooting
+                System.out.println("Employee ID: " + employee.getId() + ", ReportsTo: " + reportsToName + ", Level: " + level);
+
+                employeeOptional = managerOptional;
+            } else {
+                // If the manager is not found by name, break the loop
+                break;
+            }
+
+            level--;
+        }
+
+        return employeeOptional;
+    }
+
+
 
 }

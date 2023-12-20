@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -32,6 +31,15 @@ public class EmployeeController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+
+    @GetMapping("/{employeeId}")
+    public ResponseEntity<?> getEmployeeById(@PathVariable String employeeId) {
+        Optional<Employee> employeeOptional = employeeService.getEmployeeById(employeeId);
+
+        return employeeOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/all")
@@ -60,5 +68,20 @@ public class EmployeeController {
 
         return result.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/manager/{employeeId}/{level}")
+    public ResponseEntity<?> getNthLevelManager(
+            @PathVariable String employeeId,
+            @PathVariable int level
+    ) {
+        try {
+            Optional<Employee> nthLevelManager = employeeService.getNthLevelManager(employeeId, level);
+
+            return nthLevelManager.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
