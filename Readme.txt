@@ -20,13 +20,12 @@
        MONGO_PASSWORD=""
        MONGO_CLUSTER=""
        ```
-
 3. **API Documentation:**
 
    - **Add Employee:**
      - Endpoint: POST /api/employees/add
      - Request:
-       ```json
+       ```
        {
          "employeeName": "John Doe",
          "phoneNumber": "123-456-7890",
@@ -37,9 +36,17 @@
        ```
      - Response: Employee ID
 
-   - **Get All Employees:**
+   - **Get All Employees with Pagination and Sorting:**
      - Endpoint: GET /api/employees/all
-     - Response: List of Employees
+     - Parameters:
+       - `page` (default: 0): Page number
+       - `pageSize` (default: 10): Number of items per page
+       - `sortBy` (default: "employeeName"): Sorting criteria (e.g., "employeeName", "email")
+     - Example:
+       ```
+       GET /api/employees/all?page=0&pageSize=10&sortBy=employeeName
+       ```
+     - Response: Paginated list of employees based on the provided parameters
 
    - **Delete Employee by ID:**
      - Endpoint: DELETE /api/employees/delete/{employeeId}
@@ -48,7 +55,7 @@
    - **Update Employee by ID:**
      - Endpoint: PUT /api/employees/update/{employeeId}
      - Request:
-       ```json
+       ```
        {
          "employeeName": "Updated Name",
          "phoneNumber": "Updated Phone",
@@ -59,14 +66,15 @@
        ```
      - Response: Updated Employee
 
-     - **Get nth Level Manager:**
-         - Endpoint: GET /api/employees/manager/{employeeId}/{level}
-         - Example: To get the 2nd level manager of employee with ID "07d369f5-53ec-45e7-81f6-8c1838882c73":
-           ```
-           GET /api/employees/manager/07d369f5-53ec-45e7-81f6-8c1838882c73/2
-           ```
-         - Response: Manager at the specified level
+   - **Get nth Level Manager:**
+     - Endpoint: GET /api/employees/manager/{employeeId}/{level}
+     - Example: To get the 2nd level manager of employee with ID "07d369f5-53ec-45e7-81f6-8c1838882c73":
+       ```
+       GET /api/employees/manager/07d369f5-53ec-45e7-81f6-8c1838882c73/2
+       ```
+     - Response: Manager at the specified level
 
+==================================
 
 4. **Exception Handling and Validation:**
    - The project includes exception handling for better error responses.
